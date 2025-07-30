@@ -1,0 +1,72 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+// Patient structure
+struct Patient {
+    string name;
+    int priority;  // Lower number = higher priority
+    int id;
+
+    // Constructor
+    Patient(string n, int p, int i) : name(n), priority(p), id(i) {}
+};
+
+// Custom comparator for priority_queue (min-heap based on priority)
+struct Compare {
+    bool operator()(Patient const& a, Patient const& b) {
+        return a.priority > b.priority; // Min-heap
+    }
+};
+
+int main() {
+    priority_queue<Patient, vector<Patient>, Compare> hospitalQueue;
+    int choice, idCounter = 1;
+
+    while (true) {
+        cout << "\n=== Hospital Management Menu ===\n";
+        cout << "1. Add Patient\n";
+        cout << "2. Serve Patient\n";
+        cout << "3. View Next Patient\n";
+        cout << "4. Exit\n";
+        cout << "Choose option: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            string name;
+            int priority;
+            cout << "Enter patient name: ";
+            cin >> name;
+            cout << "Enter priority (1 = Critical, 5 = Low): ";
+            cin >> priority;
+            hospitalQueue.push(Patient(name, priority, idCounter++));
+            cout << "Patient added to the queue.\n";
+        }
+        else if (choice == 2) {
+            if (hospitalQueue.empty()) {
+                cout << "No patients in queue.\n";
+            } else {
+                Patient p = hospitalQueue.top();
+                cout << "Serving patient: " << p.name << " (Priority " << p.priority << ")\n";
+                hospitalQueue.pop();
+            }
+        }
+        else if (choice == 3) {
+            if (hospitalQueue.empty()) {
+                cout << "No patients in queue.\n";
+            } else {
+                Patient p = hospitalQueue.top();
+                cout << "Next patient: " << p.name << " (Priority " << p.priority << ")\n";
+            }
+        }
+        else if (choice == 4) {
+            break;
+        }
+        else {
+            cout << "Invalid option.\n";
+        }
+    }
+
+    return 0;
+}
